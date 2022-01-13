@@ -33,26 +33,38 @@ interface state {
     inputVal: any,
     cityData: any,
     locationData: any,
+    capital: string,
 }
 
-const Home: React.FC = () => {
+const Home: React.FC<state> = () => {
     const classes = useStyle();
     const [open, setOpen] = useState(false);
     const [capitalWeather, setCapitalWeather] = useState(false);
     const [inputVal, setInputVal] = useState("");
     const [cityData, setCityData] = useState("");
     const [locationData, setLocationData] = useState("");
+    const [capital, setCapital] = useState("");
 
     const submitClick = async () => {
         try {
-            const data = await axios.get(`http://api.weatherstack.com/current?access_key=8103d12609124071f6e54b72cb853d87&query=${inputVal}`);
-            setCityData(data.data.location);
-            setLocationData(data.data.current)
+            const data = await axios.get(`https://restcountries.com/v3.1/name/${inputVal}`);
+            setCityData(data.data[0]);
+            setCapital(data.data[0].capital);
             setOpen(true);
             setInputVal("");
             setCapitalWeather(false);
         } catch (error) {
             console.log("Wrong data",error);
+        }
+    }
+
+    const grtCapitalData = async () => {
+        try {
+            const data = await axios.get(`http://api.weatherstack.com/current?access_key=8103d12609124071f6e54b72cb853d87&query=${capital}`);
+            setLocationData(data.data.current);
+            setCapitalWeather(true);
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -68,11 +80,11 @@ const Home: React.FC = () => {
                 {
                     open ?
                         <Typography component="div" className={classes.capitalContainer}>
-                            <Typography className={classes.button} component="h4">Capital: {cityData.name}</Typography>
-                            <Typography className={classes.button} component="h4">Population: { cityData.lon }</Typography>
-                            <Typography className={classes.button} component="h4">latlng: { cityData.lat }</Typography>
-                            <Typography className={classes.button} component="h4">Country: {cityData.country} </Typography>
-                            <Button className={classes.button} variant="contained" color="primary" onClick={() => setCapitalWeather(!capitalWeather)}>
+                            <Typography className={classes.button} component="h4">Capital: {cityData.capital}</Typography>
+                            <Typography className={classes.button} component="h4">Population: { cityData.population }</Typography>
+                            <Typography className={classes.button} component="h4">latlng: { cityData.latlng[0] } - { cityData.latlng[1] }</Typography>
+                            <Typography className={classes.button} component="h4">Flag: <img src={cityData.flags.svg} width="30px" height="20px" /> </Typography>
+                            <Button className={classes.button} variant="contained" color="primary" onClick={() => grtCapitalData()}>
                                 Capital Weather
                             </Button>
                         </Typography>
