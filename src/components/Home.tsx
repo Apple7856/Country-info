@@ -26,24 +26,15 @@ const useStyle = makeStyles({
     }
 })
 
-interface state {
-    open: boolean,
-    submitOpen: boolean,
-    capitalWeather: boolean,
-    inputVal: any,
-    cityData: any,
-    locationData: any,
-    capital: string,
-}
 
-const Home: React.FC<state> = () => {
+const Home = () => {
     const classes = useStyle();
-    const [open, setOpen] = useState(false);
-    const [capitalWeather, setCapitalWeather] = useState(false);
-    const [inputVal, setInputVal] = useState("");
-    const [cityData, setCityData] = useState("");
-    const [locationData, setLocationData] = useState("");
-    const [capital, setCapital] = useState("");
+    const [open, setOpen] = useState<boolean>(false);
+    const [capitalWeather, setCapitalWeather] = useState<boolean>(false);
+    const [inputVal, setInputVal] = useState<any>("");
+    const [cityData, setCityData] = useState<any>("");
+    const [locationData, setLocationData] = useState<any>("");
+    const [capital, setCapital] = useState<string>("");
 
     const submitClick = async () => {
         try {
