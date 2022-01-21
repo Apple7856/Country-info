@@ -29,7 +29,7 @@ const useStyle = makeStyles({
 
 const Home = () => {
     const classes = useStyle();
-    const [open, setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(true);
     const [capitalWeather, setCapitalWeather] = useState<boolean>(false);
     const [inputVal, setInputVal] = useState<any>("");
     const [cityData, setCityData] = useState<any>("");
@@ -41,11 +41,11 @@ const Home = () => {
             const data = await axios.get(`https://restcountries.com/v3.1/name/${inputVal}`);
             setCityData(data.data[0]);
             setCapital(data.data[0].capital);
-            setOpen(true);
+            setOpen(false);
             setInputVal("");
             setCapitalWeather(false);
         } catch (error) {
-            console.log("Wrong data",error);
+            console.log("Wrong data", error);
         }
     }
 
@@ -61,33 +61,34 @@ const Home = () => {
 
     return (
         <Container>
-            <Typography component="div" className={classes.home}>
-                <form className={classes.form} noValidate autoComplete="off">
-                    <TextField id="outlined-basic" value={inputVal} placeholder="Search Country Name" variant="outlined" onChange={(e) => setInputVal(e.target.value)} />
-                </form>
-                <Button className={classes.button} variant="contained" color="primary" disabled={inputVal ? false : true} onClick={() => submitClick()}>
-                    Submit
-                </Button>
+            <Typography component="div" data-testid="mainComponent" className={classes.home}>
                 {
                     open ?
+                        <><form className={classes.form} noValidate autoComplete="off">
+                            <TextField id="outlined-basic" value={inputVal} placeholder="Search Country Name" variant="outlined" data-testid="inputField" onChange={(e) => setInputVal(e.target.value)} />
+                        </form>
+                            <Button data-testid="buttonTest" className={classes.button} variant="contained" color="primary" disabled={inputVal ? false : true} onClick={() => submitClick()}>
+                                Submit
+                            </Button></>
+                        :
                         <Typography component="div" className={classes.capitalContainer}>
                             <Typography className={classes.button} component="h4">Capital: {cityData.capital}</Typography>
-                            <Typography className={classes.button} component="h4">Population: { cityData.population }</Typography>
-                            <Typography className={classes.button} component="h4">latlng: { cityData.latlng[0] } - { cityData.latlng[1] }</Typography>
+                            <Typography className={classes.button} component="h4">Population: {cityData.population}</Typography>
+                            <Typography className={classes.button} component="h4">latlng: {cityData.latlng[0]} - {cityData.latlng[1]}</Typography>
                             <Typography className={classes.button} component="h4">Flag: <img src={cityData.flags.svg} width="30px" height="20px" /> </Typography>
                             <Button className={classes.button} variant="contained" color="primary" onClick={() => grtCapitalData()}>
                                 Capital Weather
                             </Button>
                         </Typography>
-                        : ""
+
                 }
                 {
                     capitalWeather ?
                         <Typography component="div" className={classes.capitalContainer}>
-                            <Typography className={classes.button} component="h4">Temperature: { locationData.temperature }</Typography>
+                            <Typography className={classes.button} component="h4">Temperature: {locationData.temperature}</Typography>
                             <Typography className={classes.button} component="h4">Weather Icons: <img src={locationData.weather_icons[0]} /></Typography>
-                            <Typography className={classes.button} component="h4">Wind Speed: { locationData.wind_speed }</Typography>
-                            <Typography className={classes.button} component="h4">Precip: { locationData.precip}</Typography>
+                            <Typography className={classes.button} component="h4">Wind Speed: {locationData.wind_speed}</Typography>
+                            <Typography className={classes.button} component="h4">Precip: {locationData.precip}</Typography>
                         </Typography>
                         : ""
                 }
